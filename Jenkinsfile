@@ -1,41 +1,44 @@
 pipeline {
-    agent any
-
-    tools {
-        maven 'Maven'
-        jdk 'Java'
-    }
+    agent { label 'maven-node' }
 
     stages {
 
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/Srinivasgonu/Jenkins-Assign.git'
+                checkout scm
             }
         }
 
-        stage('Build') {
+        stage('Build & Test') {
             steps {
-                sh 'mvn clean compile'
+                sh 'mvn clean test'
             }
         }
 
-        stage('Test') {
+        stage('Security Scan') {
             steps {
-                sh 'mvn test'
+                sh 'trivy fs --exit-code 1 --severity HIGH,CRITICAL .'
             }
         }
 
         stage('Package') {
             steps {
                 sh 'mvn package'
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy to The Application Server') {
             steps {
-                echo 'Deployment step placeholder'
+                sshagent(['ubuntu']) {
+                    sh '''
+                    scp -o StrictHostKeyChecking=no target/maven-simple-1.0-SNAPSHOT.jar ubuntu@100.28.222.49:/home/ubuntu/app.jar
+
+                    ssh -o StrictHostKeyChecking=no ubuntu@98.80.138.134 "pkill -f app.jar || true; nohup java -jar /home/ubuntu/app.jar > app.log 2>&1 &"
+                    '''
+                }
             }
         }
+
     }
 }
