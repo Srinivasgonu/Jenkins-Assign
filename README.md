@@ -79,4 +79,4 @@ coverage-check     - Verify code coverage meets minimum threshold ( > 70%)
 coverage-open      - Open code coverage report
 print-deps-updates - Print project dependencies updates
 update-deps        - Update project dependencies to latest releases
-```
+```HI
