@@ -30,7 +30,7 @@ pipeline {
 
         stage('Deploy to The Application Server') {
             steps {
-                sshagent(['ubuntu']) {
+                sshagent(['TheApplicationServer']) {
                     sh '''
                     scp -o StrictHostKeyChecking=no target/maven-simple-1.0-SNAPSHOT.jar ubuntu@98.80.138.134 :/home/ubuntu/app.jar
 
