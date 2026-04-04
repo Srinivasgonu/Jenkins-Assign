@@ -32,9 +32,9 @@ pipeline {
             steps {
                 sshagent(['TheApplicationServer']) {
                     sh '''
-                    scp -o StrictHostKeyChecking=no target/maven-simple-1.0-SNAPSHOT.jar ubuntu@98.80.138.134:/home/ubuntu/app.jar
+                    scp -o StrictHostKeyChecking=no target/maven-simple-1.0-SNAPSHOT.jar ubuntu@54.147.121.207:/home/ubuntu/app.jar
 
-                    ssh -o StrictHostKeyChecking=no ubuntu@98.80.138.134 "pkill -f app.jar || true nohup java -jar /home/ubuntu/app.jar > app.log 2>&1 &"
+                    ssh -o StrictHostKeyChecking=no ubuntu@54.147.121.207 "pkill -f app.jar || true nohup java -jar /home/ubuntu/app.jar > app.log 2>&1 &"
                     '''
                 }
             }
